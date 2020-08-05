@@ -1,0 +1,129 @@
+<LoginScreen>:
+    GridLayout:
+        cols: 1
+# The way kivy works, it will share the space evenly. so because there are two gridlayouts
+# they will each have 50 % of the area, regardless fo how much they have in them
+        GridLayout:
+            cols: 1
+            padding: 15, 15
+            spacing: 20, 20
+            Label: 
+                text: "User Login"
+                font_size: '20sp'
+            TextInput: 
+                id: username
+                hint_text: "Username"
+                font_size: '35sp'
+            TextInput:
+                id: password
+                hint_text: "Password"
+                font_size: '35sp'
+                password: True
+            RelativeLayout:
+                Button: 
+                    text: "Login"
+                    on_press: root.log_in(root.ids.username.text, root.ids.password.text)
+                    size_hint: 0.3, 0.5
+                    pos_hint: {'center_x' : 0.5, 'center_y': 0.6}
+# size_hint allows you to change the amount of space the button gets proportinally
+# however, if you have all of the space, this wont work, so you need to put the 
+# part within a relative layout
+            Label:
+                id: login_wrong
+                text: ""
+        GridLayout:
+            cols: 2
+            size_hint: 0.2, 0.2
+            padding: 10, 10
+            spacing: 10, 0
+            Button:
+                text: "Forget Password?"
+                background_color: 1, 1, 1, 0
+                # RGB and opacity
+                opacity: 1 if self.state =='normal' else 0.5
+                # everything on the right is python code
+                color: 0.1, 0.7, 1, 1
+            Button: 
+                text: "Sign Up"
+                on_press: root.sign_up()
+#               root.sign_up refers to the class we are in LoginScreen (from python script)
+                background_color: 1, 1, 1, 0
+                opacity: 1 if self.state =='normal' else 0.5
+                color: 0.1, 0.7, 1, 1
+
+<SignUpScreen>:
+    GridLayout:
+        cols: 1
+        padding: 20, 20
+        spacing: 20, 20
+        RelativeLayout:
+            Label:
+                text: "Sign up for a goodtime..."
+                pos_hint: {'center_x' : 0.5, 'center_y': 0.2}
+        TextInput:
+            id: username
+            hint_text: "Username"
+            size_hint: 1, 0.4
+            font_size: '35sp'
+        TextInput:
+            id: password
+            hint_text: "Password"
+            size_hint: 1, 0.4
+            font_size: '35sp'
+        RelativeLayout:
+            Button:
+                text: "Submit" 
+                on_press: root.add_user(root.ids.username.text, root.ids.password.text)
+                # root.ids. refer to info in that widget
+                size_hint: 0.3, 0.5
+                pos_hint: {'center_x' : 0.5, 'center_y': 0.3}
+
+<SignUpCompleteScreen>
+    GridLayout:
+        cols: 1
+        Label: 
+            text: "You have succesfully signed up!"
+        Button: 
+            text: "Back to login"
+            on_press: root.to_login()
+
+<LoginScreenSuccess>
+    GridLayout:
+        cols: 1
+        padding: 30, 30
+        spacing: 30, 30 
+        RelativeLayout:    
+            ImageButton:
+                on_press: root.log_out()
+                source: 'logout_hover.png' if self.hovered else 'logout_nothover.png'
+                size_hint: 0.35, 0.35
+                pos_hint: {'center_x' : 0.93, 'center_y': 0.8}
+        Label:
+            text:"How do you feel today?"
+        TextInput:
+            id: feeling
+            hint_text: 'Some suggestions for feelings: happy, sad, unloved...'
+        Button:
+            text: "Enlighten me..."
+            on_press: root.get_quote(root.ids.feeling.text)
+        ScrollView:
+            Label:
+                id: quote
+                text: ""
+                text_size: self.width, None
+                # height: 400 gives a absolute height
+                size_hint_y: None
+                height: self.texture_size[1]
+            
+
+
+<RootWidget>:
+    LoginScreen:
+        name: "login_screen"
+    SignUpScreen:
+        name: "sign_up_screen"
+        # Screens have a name so that they can be refered to from python script with the manager
+    SignUpCompleteScreen:
+        name: "sign_up_complete_screen"
+    LoginScreenSuccess:
+        name: "login_screen_success"
